@@ -1,0 +1,35 @@
+
+# Nossos microservicos precisam de nomes. Serao referenciados pelos seus nomes no EUREKA #
+
+spring:
+   application:
+      name: msclientes
+
+# quando colocamos porta 0 a aplicação sobe em uma porta aleatoria, randomica e que nao esta ocupada
+# pela maquina Host
+server:
+   port: 0
+   
+# digo onde esta meu servidor EUREKA, para eu poder me conectar a ele. Digo onde quero me registrar
+# em qual servidor EUREKA quero me registrar
+# Configuracao para informar onde esta o servidor Eureka. Os Clientes Eureka tem que conhecer
+# a localizacao do servidor Eureka para se registrarem nele
+# Configuration is required to locate the Eureka server, as shown in the following example:
+eureka:
+   client:
+      service-url:
+         defaultZone: http://localhost:8761/eureka
+# toda vez que registramos o servico no EUREKA ele sera registrado com um nome, porem n posso registrar
+# 2 instancias com mesmo nome, vamos gerar um nome aleatorio, mas n podemos perder a referencia que esse 
+# nome e do microservico de cliente.  
+# A Eureka Client has an app ID and an instance ID. The app ID is the name of the application while the instance ID 
+# is the unique id associated with the instance of the client. This helps Eureka Server to make a distinction 
+# between different client instances of the same application. In your example, the line shown below sets up a 
+# unique instance ID for your application having format: <client host name>:<client app name>:<some random number>
+# eureka.instance.instance-id==${spring.cloud.client.hostname}:${spring.application.name}:
+# 				${spring.application.instance_id:${random.value}}
+# Formatamos o nome da instancia no EUREKA com seguinte propriedade:
+# sendo: <Nome-da-Aplicacao:Id-da-instancia:valor-aleatorio>       
+   instance:
+      instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
+   
